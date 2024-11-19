@@ -3,8 +3,8 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 // Notion APIの設定
-const notion = new Client({ auth: 'secret_btmEgIqAktK3awMSBjTcJQ3HFl5mPlKAdAnxvF8lpdq' });
-const databaseId = 'f9c8e4698e784d1b94173e9d225b9d9e';
+const notion = new Client({ auth: '' });
+const databaseId = '';
 
 // データベースの情報を取得する関数
 async function getDatabase(databaseId) {

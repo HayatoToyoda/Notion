@@ -2,7 +2,7 @@ const appId = '661f3e2a'; // Replace with your actual App ID
 const apiKey = '28037c95ecfcbf21f7f220f1047c7e1d'; // Replace with your actual App Key
 
 async function getWordInfo(word) {
-  const url = `https://api.oxfordlearnersdictionaries.com/v1/entries/en-us/${word}?fields=definitions,examples,pronunciations,etymologies,synonyms,antonyms&app_id=${appId}&app_key=${apiKey}`;
+  const url = ``;
 
   try {
     const response = await fetch(url);
