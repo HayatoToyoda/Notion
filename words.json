@@ -1,0 +1,19 @@
+[
+    {
+      "Word": "allocate",
+      "Status": "test",
+      "Property": "test",
+      "Date": "2024-03-23", 
+      "Definition": "To distribute resources or duties for a particular purpose.",
+      "Synonyms": ["assign", "allot", "apportion", "designate"],
+      "Antonyms": ["withhold", "retain"],
+      "Etymology": "Mid 17th century: from medieval Latin allocat- 'allotted', from the verb allocare, from ad- 'to' + locare 'place'.",
+      "ExampleSentences": [
+        "The government allocated funds for the reconstruction project.",
+        "It's important to allocate your time effectively when studying."
+      ],
+      "Collocations": ["allocate resources", "allocate funds", "allocate time"],
+      "UsageNotes": "Often used in formal contexts concerning the distribution of resources.",
+      "RelatedWords": ["allocation", "allocator"]
+    }
+  ]
