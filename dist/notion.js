@@ -61,6 +61,16 @@ async function createNotionPage(row) {
             createRichText(`**Usage Notes:** ${row.UsageNotes?.join('\n') || ''}\n\n`, { bold: true }),
             createRichText(`**Related Words:** ${row.RelatedWords?.join(', ') || ''}`, { bold: true }),
         ].flat();
+        const chunkSize = 100;
+        const children = []; // 正しい型を指定
+        for (let i = 0; i < allContentRichText.length; i += chunkSize) {
+            const chunk = allContentRichText.slice(i, i + chunkSize);
+            children.push({
+                object: 'block',
+                type: 'paragraph',
+                paragraph: { rich_text: chunk }
+            }); // 型アサーションまたはas constを使用
+        }
         await notion.pages.create({
             parent: { database_id: databaseId },
             properties: {
@@ -69,7 +79,7 @@ async function createNotionPage(row) {
                 Property: { multi_select: [{ name: row.Property }] },
                 Date: { date: { start: row.Date } },
             },
-            children: [{ object: 'block', type: 'paragraph', paragraph: { rich_text: allContentRichText } }],
+            children: children, // children 配列をそのまま渡す
         });
         console.log(`Added: ${row.Word}`);
     }

@@ -3,6 +3,8 @@ import { Client, LogLevel } from '@notionhq/client';
 import { JSONRow } from './types/JSONRow';
 import { createTextWithLinks } from './utils';
 import { RichTextItemRequest } from './types/RichText';
+import { BlockObjectRequest } from '@notionhq/client/build/src/api-endpoints'; // 必要な型をインポート
+
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -69,6 +71,18 @@ export async function createNotionPage(row: JSONRow) {
       createRichText(`**Related Words:** ${row.RelatedWords?.join(', ') || ''}`, { bold: true }),
     ].flat();
 
+    const chunkSize = 100;
+    const children: BlockObjectRequest[] = []; // 正しい型を指定
+
+    for (let i = 0; i < allContentRichText.length; i += chunkSize) {
+        const chunk = allContentRichText.slice(i, i + chunkSize);
+        children.push({
+            object: 'block',
+            type: 'paragraph',
+            paragraph: { rich_text: chunk }
+        } as const satisfies BlockObjectRequest); // 型アサーションまたはas constを使用
+    }
+
     await notion.pages.create({
       parent: { database_id: databaseId },
       properties: {
@@ -77,8 +91,9 @@ export async function createNotionPage(row: JSONRow) {
         Property: { multi_select: [{ name: row.Property }] },
         Date: { date: { start: row.Date } },
       },
-      children: [{ object: 'block', type: 'paragraph', paragraph: { rich_text: allContentRichText } }],
+      children: children, // children 配列をそのまま渡す
     });
+
     console.log(`Added: ${row.Word}`);
   } catch (error) {
     console.error(`Error adding ${row.Word}: ${error}`);

@@ -12,14 +12,28 @@ const skipWords = new Set([
     type: 'text',
     text: {
       content: word,
-      link: { url: `https://www.oxfordlearnersdictionaries.com/definition/english/${word}` },
+      link: { url: `https://www.oxfordlearnersdictionaries.com/definition/english/${word.toLowerCase()}` }, // ここで単語を小文字に変換
     },
   });
   
-  export const createTextWithLinks = (text: string | undefined): RichTextItemRequest[] =>
-    text?.split(' ').map(word => {
-      const cleanWord = word.toLowerCase().replace(/[.,!?;"]/g, '');
-      return skipWords.has(cleanWord)
-        ? ({ type: 'text', text: { content: word } } as RichTextItemRequest)
-        : createLink(cleanWord);
-    }) || [];
+  export const createTextWithLinks = (text: string | undefined): RichTextItemRequest[] => {
+    if (!text) return [];
+  
+    // 単語境界、または句読点と空白の組み合わせで分割
+    const words = text.match(/[\w-]+|(?<=[.,!?;:"'])|(?=[.,!?;:"'])|\s+/g) || [];
+  
+    const richText: RichTextItemRequest[] = [];
+  
+    for (const word of words) {
+      const cleanWord = word.trim().replace(/[.,!?;:"']/g, ''); // 前後の空白も削除
+      const lowerCaseWord = cleanWord.toLowerCase();
+  
+      if (skipWords.has(lowerCaseWord) || !/^[a-zA-Z]+$/.test(lowerCaseWord) || cleanWord === "") {
+        richText.push({ type: 'text', text: { content: word } });
+      } else {
+        richText.push(createLink(cleanWord));
+      }
+    }
+  
+    return richText;
+  };
